@@ -240,7 +240,7 @@
   .chart-wrap {
     position: relative;
     width: 100%;
-    height: 200px;
+    height: 280px;
     margin-top: 8px;
   }
 
@@ -572,8 +572,16 @@ function calculate() {
 
   document.getElementById('results').style.display = 'block';
 
-  if (chartInst) chartInst.destroy();
-  chartInst = new Chart(document.getElementById('growthChart'), {
+setTimeout(() => {
+  const canvas = document.getElementById('growthChart');
+  const ctx = canvas.getContext('2d');
+
+  if (chartInst) {
+    chartInst.destroy();
+    chartInst = null;
+  }
+
+  chartInst = new Chart(ctx, {
     type: 'line',
     data: {
       labels: chartLabels,
@@ -582,9 +590,10 @@ function calculate() {
           label: '資產價值',
           data: chartValues,
           borderColor: '#3ecf8e',
+          backgroundColor: 'rgba(62,207,142,0.06)',
           borderWidth: 2,
           pointRadius: 0,
-          fill: { target: 'origin', above: 'rgba(62,207,142,0.06)' },
+          fill: true,
           tension: 0.3
         },
         {
@@ -602,10 +611,17 @@ function calculate() {
     options: {
       responsive: true,
       maintainAspectRatio: false,
-      plugins: { legend: { display: false } },
+      animation: false,
+      plugins: {
+        legend: { display: false }
+      },
       scales: {
         x: {
-          ticks: { color: '#555350', font: { size: 10 }, maxRotation: 45 },
+          ticks: {
+            color: '#555350',
+            font: { size: 10 },
+            maxRotation: 45
+          },
           grid: { display: false },
           border: { color: 'rgba(255,255,255,0.08)' }
         },
@@ -621,6 +637,7 @@ function calculate() {
       }
     }
   });
+}, 150);
 
   setTimeout(() => {
     document.getElementById('results').scrollIntoView({ behavior: 'smooth' });
